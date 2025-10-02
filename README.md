@@ -1,6 +1,7 @@
-# Video Downloader — YouTube & TikTok
+# 🎬 Video Downloader GUI - YouTube & TikTok
 
-Windows-приложение с GUI для скачивания видео и аудио с YouTube и TikTok.
+🚀 Расширенная **Desktop-версия** Telegram-бота [ClipFetch](https://t.me/ClipFetchBot).  
+Приложение с GUI для Windows/Linux/MacOS для скачивания видео и аудио с **YouTube и TikTok**, построенное на [yt-dlp](https://github.com/yt-dlp/yt-dlp).
 
 ## Возможности
 
