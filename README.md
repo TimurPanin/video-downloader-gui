@@ -4,15 +4,15 @@
 
 Desktop video downloader for **YouTube** and **TikTok**, built with **Python, Tkinter and yt-dlp**.
 
-The project provides a Windows-oriented graphical interface for common download workflows while keeping download logic, URL validation, configuration, cookies handling and UI pages separated into dedicated modules.
+The project provides a Windows-oriented graphical interface for common download workflows while keeping download logic, URL validation, configuration, cookie handling and UI pages separated into dedicated modules.
 
 > Use this application only for content you are authorized to download and in accordance with the applicable platform terms and local law.
 
 ## Status
 
-**Public portfolio project / working desktop application.**
+**Public portfolio project - working desktop application.**
 
-The current version supports YouTube and TikTok workflows, configurable download options, RU/EN interface text and Windows packaging with PyInstaller.
+The current version supports YouTube and TikTok workflows, configurable download options, Russian and English interface text, and Windows packaging with PyInstaller.
 
 ## Features
 
@@ -24,7 +24,7 @@ The current version supports YouTube and TikTok workflows, configurable download
 - Download progress reporting
 - Configurable download directory
 - Download speed limit and concurrent-fragment settings
-- Browser/session cookie support
+- Browser cookie and session support
 - Russian and English interface text
 - Persistent local settings
 - Windows executable build script
@@ -33,7 +33,7 @@ The current version supports YouTube and TikTok workflows, configurable download
 ## Tech stack
 
 - **Python 3**
-- **Tkinter / ttk**
+- **Tkinter (`ttk`)**
 - **yt-dlp**
 - **FFmpeg** for audio post-processing
 - **browser-cookie3**
@@ -47,10 +47,10 @@ The current version supports YouTube and TikTok workflows, configurable download
 video-downloader-gui/
 ├── app.py                  # Main Tkinter application
 ├── run.py                  # Convenience launcher
-├── build.py                # Windows/PyInstaller build helper
+├── build.py                # Windows build helper using PyInstaller
 ├── core/
 │   ├── config.py           # Persistent application settings
-│   ├── cookies.py          # Cookie/session handling
+│   ├── cookies.py          # Cookie and session handling
 │   ├── downloader.py       # yt-dlp integration
 │   ├── i18n.py             # Interface translations
 │   └── validation.py       # URL validation
@@ -68,7 +68,7 @@ video-downloader-gui/
 ### Requirements
 
 - Python 3.10+
-- Windows 10/11 recommended for the current desktop workflow
+- Windows 10 or 11 recommended for the current desktop workflow
 - FFmpeg available in `PATH` for MP3 extraction
 
 ### Installation
@@ -103,11 +103,11 @@ python app.py
 python test_app.py
 ```
 
-The current test suite covers URL validation, application configuration, RU/EN translation strings and YouTube single/playlist mode detection. The repository also runs the suite automatically on Windows through GitHub Actions.
+The current test suite covers URL validation, application configuration, Russian and English translation strings, and YouTube single-video and playlist mode detection. The repository also runs the suite automatically on Windows through GitHub Actions.
 
 ## Build for Windows
 
-The repository includes `build.py`, which installs/checks the required build dependencies and invokes PyInstaller.
+The repository includes `build.py`, which installs or checks the required build dependencies and invokes PyInstaller.
 
 ```bash
 python build.py
@@ -133,7 +133,7 @@ Current settings include the download directory, rate limit, concurrent fragment
 
 ## Architecture notes
 
-`core/downloader.py` encapsulates yt-dlp configuration and background download execution. The UI is split into separate menu, YouTube and TikTok pages, while configuration, URL validation, localization and cookies handling live in dedicated modules.
+`core/downloader.py` encapsulates yt-dlp configuration and background download execution. The UI is split into separate menu, YouTube and TikTok pages, while configuration, URL validation, localization and cookie handling live in dedicated modules.
 
 This keeps the desktop interface separate from the download and configuration logic and makes the project easier to extend than a single-file GUI script.
 
