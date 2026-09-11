@@ -1,5 +1,7 @@
 # Video Downloader GUI
 
+[![Tests](https://github.com/TimurPanin/video-downloader-gui/actions/workflows/tests.yml/badge.svg)](https://github.com/TimurPanin/video-downloader-gui/actions/workflows/tests.yml)
+
 Desktop video downloader for **YouTube** and **TikTok**, built with **Python, Tkinter and yt-dlp**.
 
 The project provides a Windows-oriented graphical interface for common download workflows while keeping download logic, URL validation, configuration, cookies handling and UI pages separated into dedicated modules.
@@ -101,7 +103,7 @@ python app.py
 python test_app.py
 ```
 
-The current test suite covers URL validation, application configuration, RU/EN translation strings and YouTube single/playlist mode detection.
+The current test suite covers URL validation, application configuration, RU/EN translation strings and YouTube single/playlist mode detection. The repository also runs the suite automatically on Windows through GitHub Actions.
 
 ## Build for Windows
 
