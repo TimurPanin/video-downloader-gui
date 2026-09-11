@@ -1,159 +1,146 @@
-# 🎬 Video Downloader GUI - YouTube & TikTok
+# Video Downloader GUI
 
-🚀 Расширенная **Desktop-версия** Telegram-бота [ClipFetch](https://t.me/ClipFetchBot).  
-Приложение с GUI для Windows для скачивания видео и аудио с **YouTube и TikTok**, построенное на [yt-dlp](https://github.com/yt-dlp/yt-dlp).
+Desktop video downloader for **YouTube** and **TikTok**, built with **Python, Tkinter and yt-dlp**.
 
-## Возможности
+The project provides a Windows-oriented graphical interface for common download workflows while keeping download logic, URL validation, configuration, cookies handling and UI pages separated into dedicated modules.
 
-- **YouTube**: Скачивание одиночных видео и плейлистов
-- **TikTok**: Скачивание видео с TikTok
-- **Качество**: Выбор качества видео (лучшее, 1080p, 720p, 480p, 360p)
-- **Аудио**: Извлечение только аудио в MP3
-- **Cookies**: Автоматическое создание cookies.txt из браузера
-- **Прогресс**: Прогресс-бар с процентами и скоростью
-- **Языки**: Поддержка русского и английского языков
-- **Настройки**: Гибкие настройки загрузки
+> Use this application only for content you are authorized to download and in accordance with the applicable platform terms and local law.
 
-## Системные требования
+## Status
 
-- Windows 10/11 x64
-- Python 3.10+ (для разработки)
-- FFmpeg в PATH (для аудио-выгрузки MP3)
+**Public portfolio project / working desktop application.**
 
-## Установка
+The current version supports YouTube and TikTok workflows, configurable download options, RU/EN interface text and Windows packaging with PyInstaller.
 
-### Для разработки
+## Features
 
-1. Клонируйте репозиторий:
-```bash
-git clone <repository-url>
-cd VideoDownloader
+- YouTube single-video downloads
+- YouTube playlist detection and playlist downloads
+- TikTok video downloads
+- Video quality presets: Best, 1080p, 720p, 480p and 360p where available
+- Audio-only MP3 extraction through FFmpeg
+- Download progress reporting
+- Configurable download directory
+- Download speed limit and concurrent-fragment settings
+- Browser/session cookie support
+- Russian and English interface text
+- Persistent local settings
+- Windows executable build script
+- Unit tests for URL validation, configuration, language strings and YouTube mode detection
+
+## Tech stack
+
+- **Python 3**
+- **Tkinter / ttk**
+- **yt-dlp**
+- **FFmpeg** for audio post-processing
+- **browser-cookie3**
+- **requests**
+- **unittest**
+- **PyInstaller** for Windows packaging
+
+## Project structure
+
+```text
+video-downloader-gui/
+├── app.py                  # Main Tkinter application
+├── run.py                  # Convenience launcher
+├── build.py                # Windows/PyInstaller build helper
+├── core/
+│   ├── config.py           # Persistent application settings
+│   ├── cookies.py          # Cookie/session handling
+│   ├── downloader.py       # yt-dlp integration
+│   ├── i18n.py             # Interface translations
+│   └── validation.py       # URL validation
+├── pages/
+│   ├── menu.py             # Main menu
+│   ├── loader_youtube.py   # YouTube workflow
+│   └── loader_tiktok.py    # TikTok workflow
+├── test_app.py             # unittest test suite
+├── requirements.txt
+└── LICENSE
 ```
 
-2. Установите зависимости:
+## Run locally
+
+### Requirements
+
+- Python 3.10+
+- Windows 10/11 recommended for the current desktop workflow
+- FFmpeg available in `PATH` for MP3 extraction
+
+### Installation
+
+```bash
+git clone https://github.com/TimurPanin/video-downloader-gui.git
+cd video-downloader-gui
+python -m venv .venv
+```
+
+Activate the virtual environment and install dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Запустите приложение:
+Run the application:
+
+```bash
+python run.py
+```
+
+You can also launch the main module directly:
+
 ```bash
 python app.py
 ```
 
-### Сборка исполняемого файла
+## Tests
 
-1. Установите PyInstaller:
 ```bash
-pip install pyinstaller
+python test_app.py
 ```
 
-2. Соберите .exe файл:
+The current test suite covers URL validation, application configuration, RU/EN translation strings and YouTube single/playlist mode detection.
+
+## Build for Windows
+
+The repository includes `build.py`, which installs/checks the required build dependencies and invokes PyInstaller.
+
 ```bash
-pyinstaller --onefile --noconsole --name VideoDownloader app.py
+python build.py
 ```
 
-3. Исполняемый файл будет в папке `dist/VideoDownloader.exe`
+The resulting executable is written to:
 
-## Использование
-
-### Основные функции
-
-1. **Выбор сервиса**: На главном экране выберите YouTube или TikTok
-2. **Вставка ссылки**: Вставьте ссылку на видео в соответствующее поле
-3. **Настройка параметров**: Выберите качество, тип загрузки и другие опции
-4. **Загрузка**: Нажмите кнопку "СКАЧАТЬ"
-
-### Настройки
-
-- **Папка загрузки**: Укажите папку для сохранения файлов
-- **Лимит скорости**: Ограничьте скорость загрузки (КБ/с)
-- **Cookies**: Создайте cookies.txt из браузера для доступа к приватным видео
-- **Язык**: Переключите интерфейс между русским и английским
-
-### YouTube
-
-- **Одиночное видео**: Скачивание одного видео
-- **Плейлист**: Скачивание всего плейлиста или первых N видео
-- **MIX/радио**: Разрешить загрузку MIX и радио-плейлистов
-- **Качество**: От лучшего до 360p
-
-### TikTok
-
-- **Качество**: Лучшее, 720p, 480p
-- **Аудио**: Извлечение только аудио в MP3
-
-## Структура проекта
-
-```
-VideoDownloader/
-├── app.py                 # Главный модуль приложения
-├── core/                  # Основные модули
-│   ├── config.py         # Конфигурация
-│   ├── i18n.py           # Интернационализация
-│   ├── validation.py     # Валидация URL
-│   ├── cookies.py        # Работа с cookies
-│   └── downloader.py     # Загрузчик видео
-├── pages/                # Страницы интерфейса
-│   ├── menu.py           # Главное меню
-│   ├── loader_youtube.py # Страница YouTube
-│   └── loader_tiktok.py  # Страница TikTok
-├── requirements.txt      # Зависимости
-└── README.md            # Документация
+```text
+dist/VideoDownloader.exe
 ```
 
-## Конфигурация
+FFmpeg still needs to be available to the application for audio conversion.
 
-Настройки сохраняются в `%USERPROFILE%/.vd_settings.json`:
+## Configuration
 
-```json
-{
-  "download_dir": "C:\\Users\\User\\Downloads\\VD_Logs",
-  "ratelimit_kbps": 0,
-  "concurrent_frags": 3,
-  "outtmpl": "%(playlist_title,playlist)s/%(playlist_index>03d)s - %(title).95s.%(ext)s",
-  "use_cookies_from_browser": true,
-  "cookies_browser": "chrome",
-  "cookies_profile": "Default",
-  "cookies_txt": "",
-  "last_tab": "menu",
-  "language": "ru"
-}
+Application settings are stored locally in:
+
+```text
+%USERPROFILE%/.vd_settings.json
 ```
 
-## Поддерживаемые форматы
+Current settings include the download directory, rate limit, concurrent fragments, output filename template, cookie preferences, last page and interface language.
 
-### YouTube
-- Видео: MP4, WebM
-- Аудио: MP3, M4A, WebM
-- Качество: до 4K (зависит от источника)
+## Architecture notes
 
-### TikTok
-- Видео: MP4
-- Аудио: MP3
-- Качество: до 720p
+`core/downloader.py` encapsulates yt-dlp configuration and background download execution. The UI is split into separate menu, YouTube and TikTok pages, while configuration, URL validation, localization and cookies handling live in dedicated modules.
 
-## Устранение неполадок
+This keeps the desktop interface separate from the download and configuration logic and makes the project easier to extend than a single-file GUI script.
 
-### FFmpeg не найден
-1. Скачайте FFmpeg с https://ffmpeg.org/download.html
-2. Распакуйте в папку (например, `C:\\ffmpeg`)
-3. Добавьте путь к `bin` в переменную PATH
-4. Перезапустите приложение
+## Additional documentation
 
-### Ошибки загрузки
-- Проверьте подключение к интернету
-- Убедитесь, что ссылка корректна
-- Попробуйте создать cookies.txt из браузера
-- Проверьте, что видео не заблокировано в вашем регионе
+- [Usage](USAGE.md)
+- [Build notes](BUILD.md)
+- [Changelog](CHANGELOG.md)
 
-### Проблемы с cookies
-- Убедитесь, что браузер запущен
-- Попробуйте другой браузер (Chrome, Edge, Chromium)
-- Проверьте, что у вас есть доступ к YouTube/TikTok в браузере
+## License
 
-
-## 📜 Лицензия
-
-Проект распространяется под лицензией [MIT](LICENSE).  
-Вы можете свободно использовать, изменять и распространять код при сохранении авторства.
-
+Licensed under the [MIT License](LICENSE).
