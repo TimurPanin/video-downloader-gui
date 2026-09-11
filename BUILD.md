@@ -1,292 +1,91 @@
-# Инструкции по сборке Video Downloader
+# Building Video Downloader GUI
 
-## Требования
+This document describes the current Windows build process for `VideoDownloader.exe`.
 
+## Requirements
+
+- Windows 10 or 11
 - Python 3.10+
-- Windows 10/11 x64
-- FFmpeg (для аудио-выгрузки MP3)
+- `pip`
+- FFmpeg available in `PATH` for MP3 extraction at runtime
 
-## Быстрая сборка
+## Recommended build
 
-### 1. Установка зависимостей
+Install the project dependencies:
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
-### 2. Автоматическая сборка
+Run the build helper:
 
 ```bash
 python build.py
 ```
 
-Исполняемый файл будет создан в папке `dist/VideoDownloader.exe`
+The script checks the project dependencies, installs PyInstaller when necessary, builds the executable and removes temporary PyInstaller files after a successful build.
 
-### 3. Ручная сборка
+The resulting executable is written to:
 
-```bash
-# Установка PyInstaller
-pip install pyinstaller
-
-# Сборка
-pyinstaller --onefile --noconsole --name VideoDownloader app.py
+```text
+dist/VideoDownloader.exe
 ```
 
-## Детальная сборка
+## Manual PyInstaller build
 
-### Шаг 1: Подготовка окружения
+The equivalent basic command is:
 
 ```bash
-# Создание виртуального окружения (рекомендуется)
-python -m venv venv
-venv\Scripts\activate
-
-# Установка зависимостей
-pip install -r requirements.txt
+python -m pip install pyinstaller
+pyinstaller --onefile --noconsole --name VideoDownloader --distpath dist --workpath build --specpath . app.py
 ```
 
-### Шаг 2: Тестирование
+The application modules under `core/` and `pages/` are imported by the Python application and are collected by PyInstaller through the normal import graph.
+
+## Validate the build
+
+After building:
+
+1. Confirm that `dist/VideoDownloader.exe` exists.
+2. Start the executable.
+3. Open the YouTube and TikTok pages.
+4. Confirm that settings and language switching work.
+5. Confirm that FFmpeg is available before testing MP3 extraction.
+
+## FFmpeg
+
+FFmpeg is not bundled by `build.py`. It must be available to the application at runtime when audio conversion is requested.
+
+If FFmpeg is installed but the application cannot find it, verify that the FFmpeg `bin` directory is included in the Windows `PATH` environment variable and restart the application.
+
+## Troubleshooting
+
+### PyInstaller is missing
+
+`build.py` installs PyInstaller automatically when it is not available. You can also install it manually:
 
 ```bash
-# Запуск тестов
+python -m pip install pyinstaller
+```
+
+### A dependency is missing
+
+Reinstall the project dependencies:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+### Build fails
+
+Run the test suite first:
+
+```bash
 python test_app.py
-
-# Запуск приложения для проверки
-python run.py
 ```
 
-### Шаг 3: Сборка
+Then run the build helper again and inspect the error output printed by `build.py`.
 
-```bash
-# Автоматическая сборка
-python build.py
+## Distribution note
 
-# Или ручная сборка
-pyinstaller --onefile --noconsole --name VideoDownloader app.py
-```
-
-### Шаг 4: Проверка результата
-
-После сборки проверьте:
-- Файл `dist/VideoDownloader.exe` создан
-- Размер файла ~50-100 MB
-- Файл запускается без ошибок
-
-## Опции сборки
-
-### Базовые опции
-
-```bash
-pyinstaller --onefile --noconsole --name VideoDownloader app.py
-```
-
-### Расширенные опции
-
-```bash
-pyinstaller \
-  --onefile \
-  --noconsole \
-  --name VideoDownloader \
-  --distpath dist \
-  --workpath build \
-  --specpath . \
-  --add-data "core;core" \
-  --add-data "pages;pages" \
-  --hidden-import yt_dlp \
-  --hidden-import browser_cookie3 \
-  app.py
-```
-
-### Оптимизация размера
-
-```bash
-pyinstaller \
-  --onefile \
-  --noconsole \
-  --name VideoDownloader \
-  --exclude-module matplotlib \
-  --exclude-module numpy \
-  --exclude-module pandas \
-  app.py
-```
-
-## Устранение проблем сборки
-
-### Ошибка: ModuleNotFoundError
-
-**Проблема**: Не найден модуль при запуске .exe
-
-**Решение**:
-```bash
-# Добавить скрытые импорты
-pyinstaller --hidden-import yt_dlp --hidden-import browser_cookie3 app.py
-```
-
-### Ошибка: FFmpeg not found
-
-**Проблема**: FFmpeg не найден в .exe
-
-**Решение**:
-1. Установите FFmpeg в PATH
-2. Или добавьте FFmpeg в папку с .exe
-
-### Большой размер файла
-
-**Проблема**: .exe файл слишком большой
-
-**Решение**:
-```bash
-# Исключить ненужные модули
-pyinstaller --exclude-module matplotlib --exclude-module numpy app.py
-```
-
-### Медленная сборка
-
-**Проблема**: Сборка занимает много времени
-
-**Решение**:
-```bash
-# Использовать кэш
-pyinstaller --clean --noconfirm app.py
-```
-
-## Проверка сборки
-
-### Тест 1: Запуск
-
-```bash
-# Запуск .exe файла
-dist\VideoDownloader.exe
-```
-
-### Тест 2: Функциональность
-
-1. Откройте приложение
-2. Проверьте главное меню
-3. Переключите язык
-4. Проверьте настройки
-5. Попробуйте загрузить тестовое видео
-
-### Тест 3: Зависимости
-
-```bash
-# Проверка зависимостей в .exe
-python -c "import sys; print(sys.path)"
-```
-
-## Распространение
-
-### Подготовка к распространению
-
-1. **Создайте папку для распространения**:
-   ```
-   VideoDownloader_Release/
-   ├── VideoDownloader.exe
-   ├── README.md
-   └── USAGE.md
-   ```
-
-2. **Добавьте FFmpeg** (если не в PATH):
-   ```
-   VideoDownloader_Release/
-   ├── VideoDownloader.exe
-   ├── ffmpeg.exe
-   ├── ffprobe.exe
-   └── README.md
-   ```
-
-3. **Создайте установщик** (опционально):
-   - Используйте NSIS, Inno Setup или другие инструменты
-   - Добавьте ярлык на рабочий стол
-   - Добавьте в меню "Пуск"
-
-### Системные требования для пользователей
-
-- Windows 10/11 x64
-- FFmpeg в PATH (для аудио)
-- Интернет-соединение
-- ~100 MB свободного места
-
-## Автоматизация сборки
-
-### Скрипт для CI/CD
-
-```bash
-#!/bin/bash
-# build_script.sh
-
-echo "Начинаем сборку Video Downloader..."
-
-# Установка зависимостей
-pip install -r requirements.txt
-
-# Запуск тестов
-python test_app.py
-
-# Сборка
-python build.py
-
-# Проверка результата
-if [ -f "dist/VideoDownloader.exe" ]; then
-    echo "Сборка успешна!"
-    echo "Файл: dist/VideoDownloader.exe"
-    echo "Размер: $(du -h dist/VideoDownloader.exe | cut -f1)"
-else
-    echo "Ошибка сборки!"
-    exit 1
-fi
-```
-
-### GitHub Actions
-
-```yaml
-name: Build Video Downloader
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  build:
-    runs-on: windows-latest
-    
-    steps:
-    - uses: actions/checkout@v2
-    
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.10'
-    
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
-        pip install pyinstaller
-    
-    - name: Run tests
-      run: python test_app.py
-    
-    - name: Build executable
-      run: python build.py
-    
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: VideoDownloader
-        path: dist/VideoDownloader.exe
-```
-
-## Заключение
-
-После успешной сборки у вас будет:
-
-- ✅ Исполняемый файл `VideoDownloader.exe`
-- ✅ Все зависимости включены
-- ✅ Поддержка YouTube и TikTok
-- ✅ Интерфейс на русском и английском языках
-- ✅ Автоматическое создание cookies
-- ✅ Прогресс-бар и логирование
-
-Файл готов к распространению и использованию на любом Windows-компьютере!
+The executable is a project build artifact, not a signed installer. If the application is distributed to other users, document the FFmpeg requirement and test the executable on a clean Windows environment first.
